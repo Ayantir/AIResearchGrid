@@ -1,0 +1,42 @@
+<GuiXml>
+	<Controls>
+		<TopLevelControl name="AIResearchGrid" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="true">
+			<Dimensions x="750" y="800" />
+			<Anchor point="CENTER" />
+			<Controls>
+			
+				<Backdrop name="$(parent)BG" inherits="ZO_DefaultBackdrop" />
+				
+				<Label name="$(parent)WindowTitle" font="ZoFontAnnounceMedium" text="|c8080ffAI|r RESEARCH GRID">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" />
+				</Label>
+				<Label name="$(parent)WindowSubTitle" font="ZoFontAnnounceMedium" color="00FF00">
+					<Anchor point="LEFT" relativeTo="$(parent)WindowTitle" relativePoint="RIGHT" offsetX="10" />
+				</Label>
+				
+				<Texture name="$(parent)TopDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider.dds" tier="HIGH">
+					<Dimensions x="800" y="4"/>
+					<Anchor point="TOP" relativeTo="$(parent)" offsetY="38" />
+				</Texture>
+				
+				<Button name="$(parent)ButtonCloseAddon" inherits="ZO_ButtonBehaviorClickSound">
+					<Dimensions x="40" y="40" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="15" />
+					<Textures normal="EsoUI/Art/Buttons/closebutton_up.dds"
+						pressed="EsoUI/Art/Buttons/closebutton_down.dds"
+						mouseOver="EsoUI/Art/Buttons/closebutton_mouseover.dds"
+						disabled="EsoUI/Art/Buttons/closebutton_disabled.dds"/>
+					<OnClicked>
+						AIRG_ToggleMainWindow()
+					</OnClicked>
+				</Button>
+				
+				<Texture name="$(parent)BottomDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider.dds" tier="HIGH">
+					<Dimensions x="800" y="4"/>
+					<Anchor point="TOP" relativeTo="$(parent)" offsetY="640" />
+				</Texture>
+				
+			</Controls>
+		</TopLevelControl>
+	</Controls>
+</GuiXml>

@@ -1,1 +1,1 @@
-# AIResearchGrid
+AI Research Grid allows you to quickly and easily see which traits you have researched for Blacksmithing, Clothing & Woodworking, wherever you are in the world
