@@ -137,7 +137,7 @@ local function UpdateMotifsUI()
 
 	local styleItemId, styleStoreId, styleChapterId = 1, 1, 1
 	
-	local sourceData
+	local sourceData = {}
 	if curCharacter == mergedCharacters then
 		sourceData = mergedCharactersData
 	else
@@ -280,26 +280,28 @@ local function PopulateTraitDataForCraft(craftingType)
 		
 		for traitIndex = 1, numTraits do
 		
-			local traitType, _, known = GetSmithingResearchLineTraitInfo(craftingType, researchLineIndex, traitIndex)
-			local _, timeRemainingSecs = GetSmithingResearchLineTraitTimes(craftingType, researchLineIndex, traitIndex)
-			
+			local traitType, _, known = GetSmithingResearchLineTraitInfo(craftingType, researchLineIndex, traitIndex)			
 			local rowNum = gridTraits[traitType]
 			
 			if known then
 				db.char[playerName].traits[craftingType][researchLineIndex][rowNum] = TRAIT_KNOWN
 			else
+			
+				local _, timeRemainingSecs = GetSmithingResearchLineTraitTimes(craftingType, researchLineIndex, traitIndex)
+				
 				if timeRemainingSecs then
 					local tTargetStamp = GetTimeStamp() + timeRemainingSecs
 					db.char[playerName].traits[craftingType][researchLineIndex][rowNum] = tTargetStamp
 				else
 					db.char[playerName].traits[craftingType][researchLineIndex][rowNum] = TRAIT_UNKNOWN
 				end
+				
 			end
 		end
 
 	end
 	
-	mergedCharactersData.traits[craftingType] = {}	
+	mergedCharactersData.traits[craftingType] = {}
 	for researchLineIndex = 1, GetNumSmithingResearchLines(craftingType) do
 		
 		mergedCharactersData.traits[craftingType][researchLineIndex] = {}
@@ -315,8 +317,14 @@ local function PopulateTraitDataForCraft(craftingType)
 				
 				if not mergedCharactersData.traits[craftingType][researchLineIndex][rowNum] then
 					mergedCharactersData.traits[craftingType][researchLineIndex][rowNum] = db.char[charName].traits[craftingType][researchLineIndex][rowNum]
-				elseif mergedCharactersData.traits[craftingType][researchLineIndex][rowNum] == TRAIT_UNKNOWN and db.char[charName].traits[craftingType][researchLineIndex][rowNum] ~= TRAIT_UNKNOWN then
-					mergedCharactersData.traits[craftingType][researchLineIndex][rowNum] = db.char[charName].traits[craftingType][researchLineIndex][rowNum]
+				elseif mergedCharactersData.traits[craftingType][researchLineIndex][rowNum] == TRAIT_UNKNOWN then
+					if db.char[charName].traits[craftingType] then
+						if db.char[charName].traits[craftingType][researchLineIndex] then
+							if db.char[charName].traits[craftingType][researchLineIndex][rowNum] ~= TRAIT_UNKNOWN then
+								mergedCharactersData.traits[craftingType][researchLineIndex][rowNum] = db.char[charName].traits[craftingType][researchLineIndex][rowNum]
+							end
+						end
+					end
 				elseif mergedCharactersData.traits[craftingType][researchLineIndex][rowNum] > TRAIT_UNKNOWN and db.char[charName].traits[craftingType][researchLineIndex][rowNum] > TRAIT_UNKNOWN and db.char[charName].traits[craftingType][researchLineIndex][rowNum] < mergedCharactersData.traits[craftingType][researchLineIndex][rowNum] then
 					mergedCharactersData.traits[craftingType][researchLineIndex][rowNum] = db.char[charName].traits[craftingType][researchLineIndex][rowNum]
 				end
@@ -379,7 +387,7 @@ local function BuildRelative()
 end
 
 local function BuildMatrix(eventCode, arg1, arg2, arg3)
-
+	
 	if eventCode == EVENT_SKILLS_FULL_UPDATE or eventCode == EVENT_PLAYER_ACTIVATED then
 		
 		-- Build is delayed to EVENT_PLAYER_ACTIVATED because of the ESO+ bonus which is only applied after the 1st load after OnAddonLoaded
@@ -442,20 +450,18 @@ local function BuildMatrix(eventCode, arg1, arg2, arg3)
 		BuildRelative()
 		
 	elseif eventCode == EVENT_STYLE_LEARNED then
-	
+		
 		local itemStyleId, chapterIndex = arg1, arg2
 		-- Set style known for actual char and "ALL" for styleIndex, chapterIndex
 		
 		-- Learned a complete book
 		if chapterIndex == ITEM_STYLE_CHAPTER_ALL then
-			
 			if styles[itemStyleId].stype == AIRG_STYLE_BASIC or styles[itemStyleId].stype == AIRG_STYLE_CROWNSTORE then
-			
+				
 				db.char[playerName].styles[itemStyleId] = true
 				mergedCharactersData.styles[itemStyleId] = true
 
 			elseif styles[itemStyleId].stype == AIRG_STYLE_CHAPTERIZED then
-			
 				for chapterLookupIndex in ipairs(styleChaptersLookup) do
 					db.char[playerName].styles[itemStyleId][chapterLookupIndex] = true
 					mergedCharactersData.styles[itemStyleId][chapterLookupIndex] = true
@@ -463,10 +469,15 @@ local function BuildMatrix(eventCode, arg1, arg2, arg3)
 			end
 			
 		elseif styles[itemStyleId].stype == AIRG_STYLE_CHAPTERIZED then
-			
-			db.char[playerName].styles[itemStyleId][chapterIndex] = true
-			mergedCharactersData.styles[itemStyleId][chapterIndex] = true
-			
+			local newIndexKnown
+			for aiIndex, zosIndex in ipairs(styleChaptersLookup) do
+				if chapterIndex == zosIndex then
+					newIndexKnown = aiIndex
+					break
+				end
+			end
+			db.char[playerName].styles[itemStyleId][newIndexKnown] = true
+			mergedCharactersData.styles[itemStyleId][newIndexKnown] = true
 		end
 		
 		UpdateMotifsUI()
