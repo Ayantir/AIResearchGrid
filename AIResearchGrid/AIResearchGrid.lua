@@ -21,6 +21,7 @@ local showRelative = false
 local relative = {}
 local maxColumns
 local AIRG_UI = {}
+local apiVersion
 
 local TRAIT_KNOWN = -1
 local TRAIT_UNKNOWN = 0
@@ -78,58 +79,62 @@ local styleChaptersLookup = {
 }
 
 local styles = {
-	[1]  = {stype = AIRG_STYLE_BASIC}, --Breton
-	[2]  = {stype = AIRG_STYLE_BASIC}, --Redguard
-	[3]  = {stype = AIRG_STYLE_BASIC}, --Orc
-	[4]  = {stype = AIRG_STYLE_BASIC}, --Dark Elf
-	[5]  = {stype = AIRG_STYLE_BASIC}, --Nord
-	[6]  = {stype = AIRG_STYLE_BASIC}, --Argonian
-	[7] =  {stype = AIRG_STYLE_BASIC}, --High Elf
-	[8]  = {stype = AIRG_STYLE_BASIC}, --Wood Elf
-	[9]  = {stype = AIRG_STYLE_BASIC}, --Khajiit
-	[15] = {stype = AIRG_STYLE_BASIC}, --Ancient Elf
-	[17] = {stype = AIRG_STYLE_BASIC}, --Reach
-	[19] = {stype = AIRG_STYLE_BASIC}, --Primitive
-	[20] = {stype = AIRG_STYLE_BASIC}, --Daedric
-	[34] = {stype = AIRG_STYLE_BASIC}, --Imperial
-	[30] = {stype = AIRG_STYLE_BASIC}, --Soul Shriven
-	[14] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1144}, --Dwemer
-	[28] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1319}, --Glass
-	[29] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1181}, --Xivkyn
-	[22] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1341}, --Ancient Orc
-	[33] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1318}, --Akaviri
-	[26] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1348}, --Mercenary
-	[13] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1412}, --Malacath
-	[21] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1411}, --Trinimac
-	[47] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1417}, --Outlaw
-	[24] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1414}, --Ebonheart
-	[25] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1415}, --Aldmeri
-	[23] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1416}, --Daggerfall
-	[41] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1422}, --Abah's Watch
-	[11] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1423}, --ThievesGuild
-	[46] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1424}, --Assassins League
-	[45] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1659}, --DroMathra
-	[16] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1660}, --Akatosh
-	[12] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1661}, --Dark Brotherhood
-	[39] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1662}, --Minotaur
-	[27] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1714}, --Craglorn
-	[31] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1715}, --Draugr
-	[35] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1713}, --Yokudan
-	[59] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1545}, --Hallowjack
-	[42] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1676}, --Skinchanger
-	[40] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1798}, --Ebony
-	[44] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1797}, --Ra Gada
-	[56] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1796}, --Silken Ring
-	[57] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1795}, --Mazzatum
-	[58] = {stype = AIRG_STYLE_CROWNSTORE}, --Grim Harlequin
-	[53] = {stype = AIRG_STYLE_CROWNSTORE}, --Frostcaster
-	[43] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1933}, --Morag Tong
-	[50] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1935}, --Ordinator
-	[52] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1934}, --Buoyant Armiger
-	[54] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1932}, --Ashlander
-	[48] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2022}, --Redoran
-	[49] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2021}, --Hlaalu
-	[51] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2023}, --Telvanni
+	[ITEMSTYLE_RACIAL_BRETON]  = {stype = AIRG_STYLE_BASIC}, --Breton
+	[ITEMSTYLE_RACIAL_REDGUARD]  = {stype = AIRG_STYLE_BASIC}, --Redguard
+	[ITEMSTYLE_RACIAL_ORC]  = {stype = AIRG_STYLE_BASIC}, --Orc
+	[ITEMSTYLE_RACIAL_DARK_ELF]  = {stype = AIRG_STYLE_BASIC}, --Dark Elf
+	[ITEMSTYLE_RACIAL_NORD]  = {stype = AIRG_STYLE_BASIC}, --Nord
+	[ITEMSTYLE_RACIAL_ARGONIAN]  = {stype = AIRG_STYLE_BASIC}, --Argonian
+	[ITEMSTYLE_RACIAL_HIGH_ELF] =  {stype = AIRG_STYLE_BASIC}, --High Elf
+	[ITEMSTYLE_RACIAL_WOOD_ELF]  = {stype = AIRG_STYLE_BASIC}, --Wood Elf
+	[ITEMSTYLE_RACIAL_KHAJIIT]  = {stype = AIRG_STYLE_BASIC}, --Khajiit
+	[ITEMSTYLE_AREA_ANCIENT_ELF] = {stype = AIRG_STYLE_BASIC}, --Ancient Elf
+	[ITEMSTYLE_AREA_REACH] = {stype = AIRG_STYLE_BASIC}, --Reach
+	[ITEMSTYLE_ENEMY_PRIMITIVE] = {stype = AIRG_STYLE_BASIC}, --Primitive
+	[ITEMSTYLE_ENEMY_DAEDRIC] = {stype = AIRG_STYLE_BASIC}, --Daedric
+	[ITEMSTYLE_RACIAL_IMPERIAL] = {stype = AIRG_STYLE_BASIC}, --Imperial
+	[ITEMSTYLE_AREA_SOUL_SHRIVEN] = {stype = AIRG_STYLE_BASIC}, --Soul Shriven
+	[ITEMSTYLE_AREA_DWEMER] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1144}, --Dwemer
+	[ITEMSTYLE_GLASS] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1319}, --Glass
+	[ITEMSTYLE_AREA_XIVKYN] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1181}, --Xivkyn
+	[ITEMSTYLE_AREA_ANCIENT_ORC] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1341}, --Ancient Orc
+	[ITEMSTYLE_AREA_AKAVIRI] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1318}, --Akaviri
+	[ITEMSTYLE_UNDAUNTED] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1348}, --Mercenary
+	[ITEMSTYLE_DEITY_MALACATH] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1412}, --Malacath
+	[ITEMSTYLE_DEITY_TRINIMAC] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1411}, --Trinimac
+	[ITEMSTYLE_ORG_OUTLAW] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1417}, --Outlaw
+	[ITEMSTYLE_ALLIANCE_EBONHEART] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1414}, --Ebonheart
+	[ITEMSTYLE_ALLIANCE_ALDMERI] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1415}, --Aldmeri
+	[ITEMSTYLE_ALLIANCE_DAGGERFALL] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1416}, --Daggerfall
+	[ITEMSTYLE_ORG_ABAHS_WATCH] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1422}, --Abah's Watch
+	[ITEMSTYLE_ORG_THIEVES_GUILD] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1423}, --ThievesGuild
+	[ITEMSTYLE_ORG_ASSASSINS] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1424}, --Assassins League
+	[ITEMSTYLE_ENEMY_DROMOTHRA] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1659}, --DroMathra
+	[ITEMSTYLE_DEITY_AKATOSH] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1660}, --Akatosh
+	[ITEMSTYLE_ORG_DARK_BROTHERHOOD] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1661}, --Dark Brotherhood
+	[ITEMSTYLE_ENEMY_MINOTAUR] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1662}, --Minotaur
+	[ITEMSTYLE_RAIDS_CRAGLORN] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1714}, --Craglorn
+	[ITEMSTYLE_ENEMY_DRAUGR] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1715}, --Draugr
+	[ITEMSTYLE_AREA_YOKUDAN] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1713}, --Yokudan
+	[ITEMSTYLE_HOLIDAY_HOLLOWJACK] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1545}, --Hallowjack
+	[ITEMSTYLE_HOLIDAY_SKINCHANGER] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1676}, --Skinchanger
+	[ITEMSTYLE_EBONY] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1798}, --Ebony
+	[ITEMSTYLE_AREA_RA_GADA] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1797}, --Ra Gada
+	[ITEMSTYLE_ENEMY_SILKEN_RING] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1796}, --Silken Ring
+	[ITEMSTYLE_ENEMY_MAZZATUN] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1795}, --Mazzatum
+	[ITEMSTYLE_HOLIDAY_GRIM_HARLEQUIN] = {stype = AIRG_STYLE_CROWNSTORE}, --Grim Harlequin
+	[ITEMSTYLE_HOLIDAY_FROSTCASTER] = {stype = AIRG_STYLE_CROWNSTORE}, --Frostcaster
+	[ITEMSTYLE_ORG_MORAG_TONG] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1933}, --Morag Tong
+	[ITEMSTYLE_ORG_ORDINATOR] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1935}, --Ordinator
+	[ITEMSTYLE_ORG_BUOYANT_ARMIGER] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1934}, --Buoyant Armiger
+	[ITEMSTYLE_AREA_ASHLANDER] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 1932}, --Ashlander
+	[ITEMSTYLE_ORG_REDORAN] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2022}, --Redoran
+	[ITEMSTYLE_ORG_HLAALU] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2021}, --Hlaalu
+	[ITEMSTYLE_ORG_TELVANNI] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2023}, --Telvanni
+	[61] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2098, api = 100021}, --Bloodforge
+	[62] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2097, api = 100021}, --Dreadhorn
+	[65] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2044, api = 100021}, --Apostle
+	[66] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2045, api = 100021}, --Ebonshadow
 }
 
 -- Set the icon highlights for the currently selected character
@@ -145,80 +150,77 @@ local function UpdateMotifsUI()
 	end
 	
 	if sourceData.styles then
-	
-		AIRG_UI.motifSection:SetHidden(false)
-		
 		for styleId, styleData in pairs(sourceData.styles) do
 			
-			local tooltipText = ""
-			local stoneItemLink = GetItemStyleMaterialLink(styleId)
-			local itemName = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetItemLinkName(stoneItemLink))
-			local _, _, _, _, itemStyle = GetSmithingStyleItemInfo(styleId)
-				
-			if styles[styleId].stype == AIRG_STYLE_BASIC then
-				if not styleData then
-					AIRG_UI.StyleSingleButtons[styleItemId]:SetColor(1, 0, 0, 1)
-				else
-					AIRG_UI.StyleSingleButtons[styleItemId]:SetColor(1, 1, 1, 1)
-				end
-				
-				tooltipText = zo_strformat("<<t:1>>\n<<t:2>>", GetItemStyleName(itemStyle), itemName)
-				AIRG_UI.StyleSingleButtons[styleItemId]:SetHandler("OnMouseEnter", function (self)
-					ZO_Tooltips_ShowTextTooltip(self, TOP, tooltipText)
-				end)
-				
-				styleItemId = styleItemId + 1
-				
-			elseif styles[styleId].stype == AIRG_STYLE_CROWNSTORE then
+			if not styles[styleId].api or apiVersion >= styles[styleId].api then
 			
-				if not styleData then
-					AIRG_UI.StyleStoreButtons[styleStoreId]:SetColor(1, 0, 0, 1)
-				else
-					AIRG_UI.StyleStoreButtons[styleStoreId]:SetColor(1, 1, 1, 1)
-				end
+				local tooltipText = ""
+				local stoneItemLink = GetItemStyleMaterialLink(styleId)
+				local itemName = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetItemLinkName(stoneItemLink))
+				local _, _, _, _, itemStyle = GetSmithingStyleItemInfo(styleId)
 				
-				tooltipText = zo_strformat("<<t:1>>\n<<t:2>>", GetItemStyleName(itemStyle), itemName)
-				AIRG_UI.StyleStoreButtons[styleStoreId]:SetHandler("OnMouseEnter", function (self)
-					ZO_Tooltips_ShowTextTooltip(self, TOP, tooltipText)
-				end)
-				
-				styleStoreId = styleStoreId + 1
-				
-			elseif styles[styleId].stype == AIRG_STYLE_CHAPTERIZED then
-				
-				local knownCount = 0
-				
-				-- Run through the complete list in styleChaptersLookup, and look up to see which we have
-				-- check how many chapters are known and build tooltip
-				for chapterIndex, indexValue in ipairs(styleChaptersLookup) do
-					if styleData[chapterIndex] then
-						tooltipText = zo_strjoin(nil, tooltipText, "\n|cFFFFFF", GetString("SI_ITEMSTYLECHAPTER", indexValue), "|r")
-						knownCount = knownCount + 1
+				if styles[styleId].stype == AIRG_STYLE_BASIC then
+					if not styleData then
+						AIRG_UI.StyleSingleButtons[styleItemId]:SetColor(1, 0, 0, 1)
 					else
-						tooltipText = zo_strjoin(nil, tooltipText, "\n|c806060", GetString("SI_ITEMSTYLECHAPTER", indexValue), "|r")
+						AIRG_UI.StyleSingleButtons[styleItemId]:SetColor(1, 1, 1, 1)
 					end
-				end
+					
+					tooltipText = zo_strformat("<<t:1>>\n<<t:2>>", GetItemStyleName(itemStyle), itemName)
+					AIRG_UI.StyleSingleButtons[styleItemId]:SetHandler("OnMouseEnter", function (self)
+						ZO_Tooltips_ShowTextTooltip(self, TOP, tooltipText)
+					end)
+					
+					styleItemId = styleItemId + 1
+					
+				elseif styles[styleId].stype == AIRG_STYLE_CROWNSTORE then
+				
+					if not styleData then
+						AIRG_UI.StyleStoreButtons[styleStoreId]:SetColor(1, 0, 0, 1)
+					else
+						AIRG_UI.StyleStoreButtons[styleStoreId]:SetColor(1, 1, 1, 1)
+					end
+					
+					tooltipText = zo_strformat("<<t:1>>\n<<t:2>>", GetItemStyleName(itemStyle), itemName)
+					AIRG_UI.StyleStoreButtons[styleStoreId]:SetHandler("OnMouseEnter", function (self)
+						ZO_Tooltips_ShowTextTooltip(self, TOP, tooltipText)
+					end)
+					
+					styleStoreId = styleStoreId + 1
+					
+				elseif styles[styleId].stype == AIRG_STYLE_CHAPTERIZED then
+					
+					local knownCount = 0
+					
+					-- Run through the complete list in styleChaptersLookup, and look up to see which we have
+					-- check how many chapters are known and build tooltip
+					for chapterIndex, indexValue in ipairs(styleChaptersLookup) do
+						if styleData[chapterIndex] then
+							tooltipText = zo_strjoin(nil, tooltipText, "\n|cFFFFFF", GetString("SI_ITEMSTYLECHAPTER", indexValue), "|r")
+							knownCount = knownCount + 1
+						else
+							tooltipText = zo_strjoin(nil, tooltipText, "\n|c806060", GetString("SI_ITEMSTYLECHAPTER", indexValue), "|r")
+						end
+					end
 
-				if knownCount == 14 then
-					AIRG_UI.StyleChapterButtons[styleChapterId]:SetColor(1, 1, 1, 1)
-				elseif knownCount > 0 then
-					AIRG_UI.StyleChapterButtons[styleChapterId]:SetColor(1, 1, 0, 1)
-				else
-					AIRG_UI.StyleChapterButtons[styleChapterId]:SetColor(1, 0, 0, 1)
+					if knownCount == 14 then
+						AIRG_UI.StyleChapterButtons[styleChapterId]:SetColor(1, 1, 1, 1)
+					elseif knownCount > 0 then
+						AIRG_UI.StyleChapterButtons[styleChapterId]:SetColor(1, 1, 0, 1)
+					else
+						AIRG_UI.StyleChapterButtons[styleChapterId]:SetColor(1, 0, 0, 1)
+					end
+					
+					tooltipText = zo_strjoin(nil, zo_strformat("<<t:1>> (<<2>>/14)\n<<t:3>>\n", GetItemStyleName(itemStyle), knownCount, ZO_SELECTED_TEXT:Colorize(itemName)), tooltipText)
+					AIRG_UI.StyleChapterButtons[styleChapterId]:SetHandler("OnMouseEnter", function (self)
+						ZO_Tooltips_ShowTextTooltip(self, TOP, tooltipText)
+					end)
+					
+					styleChapterId = styleChapterId + 1
+				
 				end
-				
-				tooltipText = zo_strjoin(nil, zo_strformat("<<t:1>> (<<2>>/14)\n<<t:3>>\n", GetItemStyleName(itemStyle), knownCount, ZO_SELECTED_TEXT:Colorize(itemName)), tooltipText)
-				AIRG_UI.StyleChapterButtons[styleChapterId]:SetHandler("OnMouseEnter", function (self)
-					ZO_Tooltips_ShowTextTooltip(self, TOP, tooltipText)
-				end)
-				
-				styleChapterId = styleChapterId + 1
-			
 			end
-			
 		end
-	else
-		AIRG_UI.motifSection:SetHidden(true)
 	end
 	
 end
@@ -232,39 +234,40 @@ local function PopulateStyleData()
 	
 	for styleId, styleData in pairs(styles) do
 		
-		if styleData.stype == AIRG_STYLE_BASIC or styleData.stype == AIRG_STYLE_CROWNSTORE then
-			local isStyleKnown = IsSmithingStyleKnown(styleId, 1)
-			db.char[curCharacter].styles[styleId] = isStyleKnown
-		elseif styleData.stype == AIRG_STYLE_CHAPTERIZED then
-		
-			db.char[curCharacter].styles[styleId] = {}			
-			for chapterIndex, chapterValue in ipairs(styleChaptersLookup) do
-				local _, numCompleted, numRequired = GetAchievementCriterion(styleData.achiev, chapterValue)
-				db.char[curCharacter].styles[styleId][chapterValue] = numCompleted == numRequired
+		if not styleData.api or apiVersion >= styleData.api then
+			if styleData.stype == AIRG_STYLE_BASIC or styleData.stype == AIRG_STYLE_CROWNSTORE then
+				local isStyleKnown = IsSmithingStyleKnown(styleId, 1)
+				db.char[curCharacter].styles[styleId] = isStyleKnown
+			elseif styleData.stype == AIRG_STYLE_CHAPTERIZED then
+				db.char[curCharacter].styles[styleId] = {}			
+				for chapterIndex, chapterValue in ipairs(styleChaptersLookup) do
+					local _, numCompleted, numRequired = GetAchievementCriterion(styleData.achiev, chapterValue)
+					db.char[curCharacter].styles[styleId][chapterValue] = numCompleted == numRequired
+				end
 			end
-		end
 		
-		for charName, charData in pairs(db.char) do
-			if charData.styles then
-				if styleData.stype == AIRG_STYLE_BASIC or styleData.stype == AIRG_STYLE_CROWNSTORE then
-					if not mergedCharactersData.styles[styleId] and charData.styles[styleId] then
-						mergedCharactersData.styles[styleId] = true
-					elseif mergedCharactersData.styles[styleId] == nil then
-						mergedCharactersData.styles[styleId] = false
-					end
-				elseif styleData.stype == AIRG_STYLE_CHAPTERIZED then
-					if not mergedCharactersData.styles[styleId] then mergedCharactersData.styles[styleId] = {} end
-					for chapterIndex, chapterValue in ipairs(styleChaptersLookup) do
-						if not mergedCharactersData.styles[styleId][chapterValue] and charData.styles[styleId][chapterValue] then
-							mergedCharactersData.styles[styleId][chapterValue] = true
-						elseif mergedCharactersData.styles[styleId][chapterValue] == nil then
-							mergedCharactersData.styles[styleId][chapterValue] = false
+			for charName, charData in pairs(db.char) do
+				if charData.styles then
+					if styleData.stype == AIRG_STYLE_BASIC or styleData.stype == AIRG_STYLE_CROWNSTORE then
+						if not mergedCharactersData.styles[styleId] and charData.styles[styleId] then
+							mergedCharactersData.styles[styleId] = true
+						elseif mergedCharactersData.styles[styleId] == nil then
+							mergedCharactersData.styles[styleId] = false
+						end
+					elseif styleData.stype == AIRG_STYLE_CHAPTERIZED then
+						if not mergedCharactersData.styles[styleId] then mergedCharactersData.styles[styleId] = {} end
+						for chapterIndex, chapterValue in ipairs(styleChaptersLookup) do
+							if not mergedCharactersData.styles[styleId][chapterValue] and charData.styles[styleId] and charData.styles[styleId][chapterValue] then
+								mergedCharactersData.styles[styleId][chapterValue] = true
+							elseif mergedCharactersData.styles[styleId][chapterValue] == nil then
+								mergedCharactersData.styles[styleId][chapterValue] = false
+							end
 						end
 					end
 				end
 			end
+			
 		end
-		
 	end
 	
 end
@@ -854,7 +857,7 @@ local function InitUI()
 	-- BUILD THE MOTIF ICONS ACROSS THE BOTTOM
 	-- It's set-up inside a container frame to make hiding or showing the whole lot simpler.
 	AIRG_UI.motifSection = WINDOW_MANAGER:CreateControl("$(parent)MotifSection", AIResearchGrid, CT_CONTROL)
-	AIRG_UI.motifSection:SetDimensions(750, 200)
+	AIRG_UI.motifSection:SetDimensions(750, 240)
 	AIRG_UI.motifSection:SetAnchor(TOP, AIRG_UI.BottomDivider, BOTTOM, 0, 10)
 	
 	AIRG_UI.StyleChapterButtons = {}
@@ -863,65 +866,77 @@ local function InitUI()
 	
 	local yStyleAnchor = 50
 	local xStyleAnchor = 1
-	local xStyleAnchorAlign = 50
-	local secondLine1stIndex = 18
+	local xStyleAnchorAlign = 80
+	local secondLine1stIndex = 16
+	local thirdLine1stIndex = 30
 	
 	local styleItemId, styleStoreId, styleChapterId = 1, 1, 1
 	
 	for styleId, styleData in pairs(styles) do
 	
-		local stoneItemLink = GetItemStyleMaterialLink(styleId)
-		local itemName = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetItemLinkName(stoneItemLink))
-		local stoneTexture = GetItemLinkInfo(stoneItemLink)
-	
-		if styleData.stype == AIRG_STYLE_BASIC then
+		if not styleData.api or apiVersion >= styleData.api then
 			
-			AIRG_UI.StyleSingleButtons[styleItemId] = WINDOW_MANAGER:CreateControl("$(parent)StyleSingleButton" .. tostring(styleItemId), AIRG_UI.motifSection, CT_TEXTURE)
-			AIRG_UI.StyleSingleButtons[styleItemId]:SetDimensions(40, 40)
-			AIRG_UI.StyleSingleButtons[styleItemId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 40 * styleItemId + 40, 0)			
-			AIRG_UI.StyleSingleButtons[styleItemId]:SetTexture(stoneTexture)
-			AIRG_UI.StyleSingleButtons[styleItemId]:SetMouseEnabled(true)
-			AIRG_UI.StyleSingleButtons[styleItemId]:SetHandler("OnMouseExit", function (self)
-				ZO_Tooltips_HideTextTooltip()
-			end)
-			
-			styleItemId = styleItemId + 1
-			
-		elseif styleData.stype == AIRG_STYLE_CROWNSTORE then
+			local stoneItemLink = GetItemStyleMaterialLink(styleId)
+			local itemName = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetItemLinkName(stoneItemLink))
+			local stoneTexture = GetItemLinkInfo(stoneItemLink)
 		
-			AIRG_UI.StyleStoreButtons[styleStoreId] = WINDOW_MANAGER:CreateControl("$(parent)StyleStoreButton" .. tostring(styleStoreId), AIRG_UI.motifSection, CT_TEXTURE)
-			AIRG_UI.StyleStoreButtons[styleStoreId]:SetDimensions(40, 40)
-			AIRG_UI.StyleStoreButtons[styleStoreId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 10, styleStoreId * 50 - 50)
-			AIRG_UI.StyleStoreButtons[styleStoreId]:SetTexture(stoneTexture)
-			AIRG_UI.StyleStoreButtons[styleStoreId]:SetMouseEnabled(true)
-			AIRG_UI.StyleStoreButtons[styleStoreId]:SetHandler("OnMouseExit", function (self)
-				ZO_Tooltips_HideTextTooltip()
-			end)
+			if styleData.stype == AIRG_STYLE_BASIC then
+				
+				AIRG_UI.StyleSingleButtons[styleItemId] = WINDOW_MANAGER:CreateControl("$(parent)StyleSingleButton" .. tostring(styleItemId), AIRG_UI.motifSection, CT_TEXTURE)
+				AIRG_UI.StyleSingleButtons[styleItemId]:SetDimensions(40, 40)
+				AIRG_UI.StyleSingleButtons[styleItemId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 40 * styleItemId + 40, 0)			
+				AIRG_UI.StyleSingleButtons[styleItemId]:SetTexture(stoneTexture)
+				AIRG_UI.StyleSingleButtons[styleItemId]:SetMouseEnabled(true)
+				AIRG_UI.StyleSingleButtons[styleItemId]:SetHandler("OnMouseExit", function (self)
+					ZO_Tooltips_HideTextTooltip()
+				end)
+				
+				styleItemId = styleItemId + 1
+				
+			elseif styleData.stype == AIRG_STYLE_CROWNSTORE then
 			
-			styleStoreId = styleStoreId + 1
-			
-		elseif styleData.stype == AIRG_STYLE_CHAPTERIZED then
-	
-			if styleChapterId == secondLine1stIndex then
-				xStyleAnchor = 1
-				yStyleAnchor = 90
-				xStyleAnchorAlign = 30
+				AIRG_UI.StyleStoreButtons[styleStoreId] = WINDOW_MANAGER:CreateControl("$(parent)StyleStoreButton" .. tostring(styleStoreId), AIRG_UI.motifSection, CT_TEXTURE)
+				AIRG_UI.StyleStoreButtons[styleStoreId]:SetDimensions(40, 40)
+				AIRG_UI.StyleStoreButtons[styleStoreId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 10, styleStoreId * 50 - 50)
+				AIRG_UI.StyleStoreButtons[styleStoreId]:SetTexture(stoneTexture)
+				AIRG_UI.StyleStoreButtons[styleStoreId]:SetMouseEnabled(true)
+				AIRG_UI.StyleStoreButtons[styleStoreId]:SetHandler("OnMouseExit", function (self)
+					ZO_Tooltips_HideTextTooltip()
+				end)
+				
+				styleStoreId = styleStoreId + 1
+				
+			elseif styleData.stype == AIRG_STYLE_CHAPTERIZED then
+		
+				if styleChapterId == secondLine1stIndex then
+					xStyleAnchor = 1
+					yStyleAnchor = 90
+					xStyleAnchorAlign = 100
+				end
+				
+				if styleChapterId == thirdLine1stIndex then
+					xStyleAnchor = 1
+					yStyleAnchor = 130
+					xStyleAnchorAlign = 170
+					if apiVersion == 100020 then
+						xStyleAnchorAlign = 240
+					end
+				end
+				
+				AIRG_UI.StyleChapterButtons[styleChapterId] = WINDOW_MANAGER:CreateControl("$(parent)StyleChapterButton" .. tostring(styleChapterId), AIRG_UI.motifSection, CT_TEXTURE)
+				AIRG_UI.StyleChapterButtons[styleChapterId]:SetDimensions(32, 32)
+				AIRG_UI.StyleChapterButtons[styleChapterId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 35 * xStyleAnchor + xStyleAnchorAlign, yStyleAnchor)
+				AIRG_UI.StyleChapterButtons[styleChapterId]:SetTexture(stoneTexture)
+				AIRG_UI.StyleChapterButtons[styleChapterId]:SetMouseEnabled(true)
+				AIRG_UI.StyleChapterButtons[styleChapterId]:SetHandler("OnMouseExit", function (self)
+					ZO_Tooltips_HideTextTooltip()
+				end)
+				
+				xStyleAnchor = xStyleAnchor + 1
+				styleChapterId = styleChapterId + 1
+				
 			end
-			
-			AIRG_UI.StyleChapterButtons[styleChapterId] = WINDOW_MANAGER:CreateControl("$(parent)StyleChapterButton" .. tostring(styleChapterId), AIRG_UI.motifSection, CT_TEXTURE)
-			AIRG_UI.StyleChapterButtons[styleChapterId]:SetDimensions(32, 32)
-			AIRG_UI.StyleChapterButtons[styleChapterId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 35 * xStyleAnchor + xStyleAnchorAlign, yStyleAnchor)
-			AIRG_UI.StyleChapterButtons[styleChapterId]:SetTexture(stoneTexture)
-			AIRG_UI.StyleChapterButtons[styleChapterId]:SetMouseEnabled(true)
-			AIRG_UI.StyleChapterButtons[styleChapterId]:SetHandler("OnMouseExit", function (self)
-				ZO_Tooltips_HideTextTooltip()
-			end)
-			
-			xStyleAnchor = xStyleAnchor + 1
-			styleChapterId = styleChapterId + 1
-			
 		end
-		
 	end
 
 end
@@ -966,6 +981,8 @@ local function OnAddonLoaded(_, addonName)
 		-- Register Keybinding
 		ZO_CreateStringId("SI_BINDING_NAME_TOGGLE_AIRG", GetString(AIRG_KEYBIND_TOGGLE))
 		
+		apiVersion = GetAPIVersion()
+		
 		-- Character renamed
 		if NAME_CHANGE:DidNameChange() then
 			db.char[GetUnitName("player")] = db.char[NAME_CHANGE:GetOldCharacterName()]
@@ -996,7 +1013,11 @@ local function OnAddonLoaded(_, addonName)
 		EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_SMITHING_TRAIT_RESEARCH_TIMES_UPDATED, BuildMatrix)
 		EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_SMITHING_TRAIT_RESEARCH_STARTED, BuildMatrix)
 		EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_SMITHING_TRAIT_RESEARCH_COMPLETED, BuildMatrix)
-		--EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_SKILLS_FULL_UPDATE, BuildMatrix)
+		
+		if apiVersion >= 100021 then
+			EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_SKILLS_FULL_UPDATE, BuildMatrix)
+		end
+		
 		EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_PLAYER_ACTIVATED, BuildMatrix)
 		EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_STYLE_LEARNED, BuildMatrix)
 		

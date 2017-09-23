@@ -1,7 +1,7 @@
 <GuiXml>
 	<Controls>
 		<TopLevelControl name="AIResearchGrid" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="true">
-			<Dimensions x="750" y="800" />
+			<Dimensions x="750" y="840" />
 			<Anchor point="CENTER" />
 			<Controls>
 			
