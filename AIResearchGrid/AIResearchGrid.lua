@@ -30,6 +30,10 @@ local AIRG_STYLE_BASIC = 1
 local AIRG_STYLE_CHAPTERIZED = 2
 local AIRG_STYLE_CROWNSTORE = 3
 
+local BLACKSMITHING_RESEARCH_LEVEL
+local CLOTHIER_RESEARCH_LEVEL
+local WOODWORKING_RESEARCH_LEVEL
+
 -- Defaults options for saved variables
 local defaults = {
 	showMotifs = true,
@@ -391,13 +395,17 @@ end
 
 local function BuildMatrix(eventCode, arg1, arg2, arg3)
 	
-	if eventCode == EVENT_SKILLS_FULL_UPDATE or eventCode == EVENT_PLAYER_ACTIVATED then
+	-- Build is delayed to EVENT_PLAYER_ACTIVATED because of the ESO+ bonus which is only applied after the 1st load after OnAddonLoaded
+	if eventCode == EVENT_PLAYER_ACTIVATED then
 		
-		-- Build is delayed to EVENT_PLAYER_ACTIVATED because of the ESO+ bonus which is only applied after the 1st load after OnAddonLoaded
-		-- EVENT_SKILLS_FULL_UPDATE handle the % time bonus when buying a new skill in realtime
+		EVENT_MANAGER:UnregisterForEvent(ADDON_NAME, EVENT_PLAYER_ACTIVATED)
+		
+		BLACKSMITHING_RESEARCH_LEVEL = GetNonCombatBonus(NON_COMBAT_BONUS_BLACKSMITHING_RESEARCH_LEVEL)
+		CLOTHIER_RESEARCH_LEVEL = GetNonCombatBonus(NON_COMBAT_BONUS_CLOTHIER_RESEARCH_LEVEL)
+		WOODWORKING_RESEARCH_LEVEL = GetNonCombatBonus(NON_COMBAT_BONUS_WOODWORKING_RESEARCH_LEVEL)
 		
 		db.char[playerName].traits = {}
-		if not mergedCharactersData.traits then mergedCharactersData.traits = {} end
+		mergedCharactersData.traits = {}
 		
 		PopulateTraitDataForCraft(CRAFTING_TYPE_BLACKSMITHING)
 		PopulateTraitDataForCraft(CRAFTING_TYPE_CLOTHIER)
@@ -407,10 +415,27 @@ local function BuildMatrix(eventCode, arg1, arg2, arg3)
 		PopulateStyleData()
 		UpdateMotifsUI()
 		
-		if eventCode == EVENT_PLAYER_ACTIVATED then
-			EVENT_MANAGER:UnregisterForEvent(ADDON_NAME, EVENT_PLAYER_ACTIVATED) 
-		end
+	-- EVENT_SKILLS_FULL_UPDATE handle the % time bonus when buying a new skill in realtime
+	elseif eventCode == EVENT_SKILLS_FULL_UPDATE then
+			
+		local NEW_BLACKSMITHING_RESEARCH_LEVEL = GetNonCombatBonus(NON_COMBAT_BONUS_BLACKSMITHING_RESEARCH_LEVEL)
+		local NEW_CLOTHIER_RESEARCH_LEVEL = GetNonCombatBonus(NON_COMBAT_BONUS_CLOTHIER_RESEARCH_LEVEL)
+		local NEW_WOODWORKING_RESEARCH_LEVEL = GetNonCombatBonus(NON_COMBAT_BONUS_WOODWORKING_RESEARCH_LEVEL)
 		
+		if NEW_BLACKSMITHING_RESEARCH_LEVEL ~= BLACKSMITHING_RESEARCH_LEVEL then
+			BLACKSMITHING_RESEARCH_LEVEL = NEW_BLACKSMITHING_RESEARCH_LEVEL
+			PopulateTraitDataForCraft(CRAFTING_TYPE_BLACKSMITHING)
+			BuildRelative()
+		elseif NEW_CLOTHIER_RESEARCH_LEVEL ~= CLOTHIER_RESEARCH_LEVEL then
+			CLOTHIER_RESEARCH_LEVEL = NEW_CLOTHIER_RESEARCH_LEVEL
+			PopulateTraitDataForCraft(CRAFTING_TYPE_CLOTHIER)
+			BuildRelative()
+		elseif NEW_WOODWORKING_RESEARCH_LEVEL ~= WOODWORKING_RESEARCH_LEVEL then
+			WOODWORKING_RESEARCH_LEVEL = NEW_WOODWORKING_RESEARCH_LEVEL
+			PopulateTraitDataForCraft(CRAFTING_TYPE_WOODWORKING)
+			BuildRelative()
+		end
+	
 	elseif eventCode == EVENT_SMITHING_TRAIT_RESEARCH_STARTED then
 	
 		local craftingType, researchLineIndex, traitIndex = arg1, arg2, arg3
