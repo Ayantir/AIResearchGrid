@@ -824,11 +824,12 @@ local function InitUI()
 	AIRG_UI.btnBlacksmithing:SetNormalTexture("/esoui/art/icons/ability_smith_007.dds")
 	AIRG_UI.btnBlacksmithing:SetMouseOverTexture("esoui/art/buttons/generic_highlight.dds")
 	AIRG_UI.btnBlacksmithing:SetHandler("OnClicked", function(self) OnCraftSelected(CRAFTING_TYPE_BLACKSMITHING) end)
+	AIRG_UI.btnBlacksmithing:SetHandler("OnMouseEnter", function(self) ZO_Tooltips_ShowTextTooltip(self, TOP, GetString(SI_ITEMFILTERTYPE13)) end)
+	AIRG_UI.btnBlacksmithing:SetHandler("OnMouseExit", function (self) ZO_Tooltips_HideTextTooltip() end)
 
 	-- CREATE BUTTON FOR PROFESSION: WOODWORKING
 	AIRG_UI.btnWoodworking = WINDOW_MANAGER:CreateControl("$(parent)ButtonWoodworking", AIResearchGrid, CT_BUTTON)
 	AIRG_UI.btnWoodworking:SetDimensions(48, 48)
---	AIRG_UI.btnWoodworking:SetAnchor(TOPLEFT, AIRG_UI.btnBlacksmithing, TOPRIGHT, 12 , 0)
 	AIRG_UI.btnWoodworking:SetAnchor(TOPLEFT, AIRG_UI.btnBlacksmithing, BOTTOMLEFT, 0, 12)
 	AIRG_UI.btnWoodworking:SetState(BSTATE_NORMAL)
 	AIRG_UI.btnWoodworking:SetMouseOverBlendMode(0)
@@ -838,11 +839,12 @@ local function InitUI()
 	AIRG_UI.btnWoodworking:SetNormalTexture("/esoui/art/icons/ability_tradecraft_009.dds")
 	AIRG_UI.btnWoodworking:SetMouseOverTexture("esoui/art/buttons/generic_highlight.dds")
 	AIRG_UI.btnWoodworking:SetHandler("OnClicked", function(self) OnCraftSelected(CRAFTING_TYPE_WOODWORKING) end)
+	AIRG_UI.btnWoodworking:SetHandler("OnMouseEnter", function(self) ZO_Tooltips_ShowTextTooltip(self, TOP, GetString(SI_ITEMFILTERTYPE14)) end)
+	AIRG_UI.btnWoodworking:SetHandler("OnMouseExit", function (self) ZO_Tooltips_HideTextTooltip() end)
 
 	-- CREATE BUTTON FOR PROFESSION: CLOTHING
 	AIRG_UI.btnClothing = WINDOW_MANAGER:CreateControl("$(parent)ButtonClothing", AIResearchGrid, CT_BUTTON)
 	AIRG_UI.btnClothing:SetDimensions(48, 48)
---	AIRG_UI.btnClothing:SetAnchor(TOPLEFT, AIRG_UI.btnWoodworking, TOPRIGHT, 12, 0)
 	AIRG_UI.btnClothing:SetAnchor(TOPLEFT, AIRG_UI.btnWoodworking, BOTTOMLEFT, 0, 12)
 	AIRG_UI.btnClothing:SetState(BSTATE_NORMAL)
 	AIRG_UI.btnClothing:SetMouseOverBlendMode(0)
@@ -852,8 +854,10 @@ local function InitUI()
 	AIRG_UI.btnClothing:SetNormalTexture("/esoui/art/icons/ability_tradecraft_008.dds")
 	AIRG_UI.btnClothing:SetMouseOverTexture("esoui/art/buttons/generic_highlight.dds")
 	AIRG_UI.btnClothing:SetHandler("OnClicked", function(self) OnCraftSelected(CRAFTING_TYPE_CLOTHIER) end)
+	AIRG_UI.btnClothing:SetHandler("OnMouseEnter", function(self) ZO_Tooltips_ShowTextTooltip(self, TOP, GetString(SI_ITEMFILTERTYPE15)) end)
+	AIRG_UI.btnClothing:SetHandler("OnMouseExit", function (self) ZO_Tooltips_HideTextTooltip() end)
 
-	-- CREATE BUTTON FOR PROFESSION: CLOTHING
+	-- CREATE BUTTON FOR PROFESSION: JEWELRY CRAFTING
 	AIRG_UI.btnJewelryCrafting = WINDOW_MANAGER:CreateControl("$(parent)ButtonJewelryCrafting", AIResearchGrid, CT_BUTTON)
 	AIRG_UI.btnJewelryCrafting:SetDimensions(48, 48)
 	AIRG_UI.btnJewelryCrafting:SetAnchor(TOPLEFT, AIRG_UI.btnClothing, BOTTOMLEFT, 0 , 12)
@@ -865,6 +869,8 @@ local function InitUI()
 	AIRG_UI.btnJewelryCrafting:SetNormalTexture("/esoui/art/icons/passive_jewelerengraver.dds")
 	AIRG_UI.btnJewelryCrafting:SetMouseOverTexture("esoui/art/buttons/generic_highlight.dds")
 	AIRG_UI.btnJewelryCrafting:SetHandler("OnClicked", function(self) OnCraftSelected(CRAFTING_TYPE_JEWELRYCRAFTING) end)
+	AIRG_UI.btnJewelryCrafting:SetHandler("OnMouseEnter", function(self) ZO_Tooltips_ShowTextTooltip(self, TOP, GetString(SI_ITEMFILTERTYPE24)) end)
+	AIRG_UI.btnJewelryCrafting:SetHandler("OnMouseExit", function (self) ZO_Tooltips_HideTextTooltip() end)
 
 	-- BUILD THE TRAIT LABELS ON THE LEFT-SIDE using built-in language strings
 	AIRG_UI.rowLabels = {}
