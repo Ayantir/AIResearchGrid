@@ -6,7 +6,7 @@
 
 ## Title: |cFFFFB0Research Grid|r
 ## Description: Allows you to quickly and easily see which traits your characters have researched for Blacksmithing, Clothing & Woodworking, wherever you are in the world.
-## Version: 10.1
+## Version: 10
 ## APIVersion: 100023
 ## Author: Ayantir & others
 ## SavedVariables: AIRG_SavedVariables
