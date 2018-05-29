@@ -8,6 +8,12 @@
 -- Close on Esc code by Wandamey
 -- Glass, Xivkyn, Ancient Orc, and Mercenary Akaviri added in by Scinutz
 -- Code clean & lot of stuff reworked by Ayantir
+-- AM - 4 new motifs (Pyandonean, Psijic, Fang Lair and Sapiarch) added by AssemblerManiac
+-- AM - Minor code cleanup, single table now holds style buttons
+-- AM - styleOrder table implemented to keep style order fixed
+--      it was changing between creation of the UI and the updates of the tooltips, causing mismatched icon/tooltip data
+-- AM - added Jewelry Crafting tracking
+
 
 local ADDON_NAME = "AIResearchGrid"
 local db
