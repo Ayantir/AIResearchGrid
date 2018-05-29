@@ -153,10 +153,79 @@ local styles = {
 	[62] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2097}, --Dreadhorn
 	[65] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2044}, --Apostle
 	[66] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2045}, --Ebonshadow
+	[69] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2190}, -- Fang Lair
 	[71] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2186}, -- Psijic
 	[72] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2187}, -- Sapiarch
 	[75] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2285}, -- Pyandonean
 }
+
+-- 6-28-18 AssemblerManiac - for unknown reasons, iterating the table above to create the icons doesn't keep them in a consistent order
+-- force it to be correct
+local styleOrder = {
+	[1] = ITEMSTYLE_RACIAL_BRETON,
+	[2] = ITEMSTYLE_RACIAL_REDGUARD,
+	[3] = ITEMSTYLE_RACIAL_ORC,
+	[4] = ITEMSTYLE_RACIAL_DARK_ELF,
+	[5] = ITEMSTYLE_RACIAL_NORD,
+	[6] = ITEMSTYLE_RACIAL_ARGONIAN,
+	[7] = ITEMSTYLE_RACIAL_HIGH_ELF,
+	[8] = ITEMSTYLE_RACIAL_WOOD_ELF,
+	[9] = ITEMSTYLE_RACIAL_KHAJIIT,
+	[10] = ITEMSTYLE_AREA_ANCIENT_ELF,
+	[11] = ITEMSTYLE_AREA_REACH,
+	[12] = ITEMSTYLE_ENEMY_PRIMITIVE,
+	[13] = ITEMSTYLE_ENEMY_DAEDRIC,
+	[14] = ITEMSTYLE_RACIAL_IMPERIAL,
+	[15] = ITEMSTYLE_AREA_SOUL_SHRIVEN,
+	[16] = ITEMSTYLE_HOLIDAY_GRIM_HARLEQUIN,
+	[17] = ITEMSTYLE_HOLIDAY_FROSTCASTER,
+	[18] = ITEMSTYLE_AREA_DWEMER,
+	[19] = ITEMSTYLE_GLASS,
+	[20] = ITEMSTYLE_AREA_XIVKYN,
+	[21] = ITEMSTYLE_AREA_ANCIENT_ORC,
+	[22] = ITEMSTYLE_AREA_AKAVIRI,
+	[23] = ITEMSTYLE_UNDAUNTED,
+	[24] = ITEMSTYLE_DEITY_MALACATH,
+	[25] = ITEMSTYLE_DEITY_TRINIMAC,
+	[26] = ITEMSTYLE_ORG_OUTLAW,
+	[27] = ITEMSTYLE_ALLIANCE_EBONHEART,
+	[28] = ITEMSTYLE_ALLIANCE_ALDMERI,
+	[29] = ITEMSTYLE_ALLIANCE_DAGGERFALL,
+	[30] = ITEMSTYLE_ORG_ABAHS_WATCH,
+	[31] = ITEMSTYLE_ORG_THIEVES_GUILD,
+	[32] = ITEMSTYLE_ORG_ASSASSINS,
+	[33] = ITEMSTYLE_ENEMY_DROMOTHRA,
+	[34] = ITEMSTYLE_DEITY_AKATOSH,
+	[35] = ITEMSTYLE_ORG_DARK_BROTHERHOOD,
+	[36] = ITEMSTYLE_ENEMY_MINOTAUR,
+	[37] = ITEMSTYLE_RAIDS_CRAGLORN,
+	[38] = ITEMSTYLE_ENEMY_DRAUGR,
+	[39] = ITEMSTYLE_AREA_YOKUDAN,
+	[40] = ITEMSTYLE_HOLIDAY_HOLLOWJACK,
+	[41] = ITEMSTYLE_HOLIDAY_SKINCHANGER,
+	[42] = ITEMSTYLE_EBONY,
+	[43] = ITEMSTYLE_AREA_RA_GADA,
+	[44] = ITEMSTYLE_ENEMY_SILKEN_RING,
+	[45] = ITEMSTYLE_ENEMY_MAZZATUN,
+	[46] = ITEMSTYLE_ORG_MORAG_TONG,
+	[47] = ITEMSTYLE_ORG_ORDINATOR,
+	[48] = ITEMSTYLE_ORG_BUOYANT_ARMIGER,
+	[49] = ITEMSTYLE_AREA_ASHLANDER,
+	[50] = ITEMSTYLE_ORG_REDORAN,
+	[51] = ITEMSTYLE_ORG_HLAALU,
+	[52] = ITEMSTYLE_ORG_TELVANNI,
+	[53] = ITEMSTYLE_ORG_WORM_CULT,
+	[54] = 61,
+	[55] = 62,
+	[56] = 65,
+	[57] = 66,
+	[58] = 69,
+	[59] = 71,
+	[60] = 72,
+	[61] = 75,
+	}
+
+
 
 -- Set the icon highlights for the currently selected character
 local function UpdateMotifsUI()
@@ -182,32 +251,28 @@ local function UpdateMotifsUI()
 
 				if styles[styleId].stype == AIRG_STYLE_BASIC then
 					if not styleData then
-						AIRG_UI.StyleSingleButtons[styleItemId]:SetColor(1, 0, 0, 1)
+						AIRG_UI.StyleButtons[styleId]:SetColor(1, 0, 0, 1)
 					else
-						AIRG_UI.StyleSingleButtons[styleItemId]:SetColor(1, 1, 1, 1)
+						AIRG_UI.StyleButtons[styleId]:SetColor(1, 1, 1, 1)
 					end
 
 					tooltipText = zo_strformat("<<t:1>>\n<<t:2>>", GetItemStyleName(itemStyle), itemName)
-					AIRG_UI.StyleSingleButtons[styleItemId]:SetHandler("OnMouseEnter", function (self)
+					AIRG_UI.StyleButtons[styleId]:SetHandler("OnMouseEnter", function (self)
 						ZO_Tooltips_ShowTextTooltip(self, TOP, tooltipText)
 					end)
-
-					styleItemId = styleItemId + 1
 
 				elseif styles[styleId].stype == AIRG_STYLE_CROWNSTORE then
 
 					if not styleData then
-						AIRG_UI.StyleStoreButtons[styleStoreId]:SetColor(1, 0, 0, 1)
+						AIRG_UI.StyleButtons[styleId]:SetColor(1, 0, 0, 1)
 					else
-						AIRG_UI.StyleStoreButtons[styleStoreId]:SetColor(1, 1, 1, 1)
+						AIRG_UI.StyleButtons[styleId]:SetColor(1, 1, 1, 1)
 					end
 
 					tooltipText = zo_strformat("<<t:1>>\n<<t:2>>", GetItemStyleName(itemStyle), itemName)
-					AIRG_UI.StyleStoreButtons[styleStoreId]:SetHandler("OnMouseEnter", function (self)
+					AIRG_UI.StyleButtons[styleId]:SetHandler("OnMouseEnter", function (self)
 						ZO_Tooltips_ShowTextTooltip(self, TOP, tooltipText)
 					end)
-
-					styleStoreId = styleStoreId + 1
 
 				elseif styles[styleId].stype == AIRG_STYLE_CHAPTERIZED then
 
@@ -226,24 +291,24 @@ local function UpdateMotifsUI()
 							tooltipText = zo_strjoin(nil, tooltipText, "\n|c806060", GetString("SI_ITEMSTYLECHAPTER", indexValue), "|r")
 						end
 					end
-					AIRG_UI.StyleChapterButtons[styleChapterId].chapVal = chapVal						-- AM - Achieve links from styles
-					AIRG_UI.StyleChapterButtons[styleChapterId].achieve = styles[styleId].achiev		-- AM - Achieve links from styles
+					AIRG_UI.StyleButtons[styleId].chapVal = chapVal						-- AM - Achieve links from styles
+					AIRG_UI.StyleButtons[styleId].achieve = styles[styleId].achiev		-- AM - Achieve links from styles
 
 					if knownCount == 14 then
-						AIRG_UI.StyleChapterButtons[styleChapterId]:SetColor(1, 1, 1, 1)
+						AIRG_UI.StyleButtons[styleId]:SetColor(1, 1, 1, 1)
 					elseif knownCount > 0 then
-						AIRG_UI.StyleChapterButtons[styleChapterId]:SetColor(1, 1, 0, 1)
+						AIRG_UI.StyleButtons[styleId]:SetColor(1, 1, 0, 1)
 					else
-						AIRG_UI.StyleChapterButtons[styleChapterId]:SetColor(1, 0, 0, 1)
+						AIRG_UI.StyleButtons[styleId]:SetColor(1, 0, 0, 1)
 					end
 
 					tooltipText = zo_strjoin(nil, zo_strformat("<<t:1>> (<<2>>/14)\n<<t:3>>\n", GetItemStyleName(itemStyle), knownCount, ZO_SELECTED_TEXT:Colorize(itemName)), tooltipText)
-					AIRG_UI.StyleChapterButtons[styleChapterId]:SetHandler("OnMouseEnter", function (self)
+					AIRG_UI.StyleButtons[styleId]:SetHandler("OnMouseEnter", function (self)
 						ZO_Tooltips_ShowTextTooltip(self, TOP, tooltipText)
 					end)
 
 				-- AM - Achieve links from styles (next 3 lines)
-				AIRG_UI.StyleChapterButtons[styleChapterId]:SetHandler("OnMouseUp", function (control, mButton)
+				AIRG_UI.StyleButtons[styleId]:SetHandler("OnMouseUp", function (control, mButton)
 					AIRG_ProcessRightClick(control, mButton)
 				end)
 					styleChapterId = styleChapterId + 1
@@ -546,8 +611,11 @@ local function BuildMatrix(eventCode, arg1, arg2, arg3)
 		local itemStyleId, chapterIndex = arg1, arg2
 		-- Set style known for actual char and "ALL" for styleIndex, chapterIndex
 
-		-- Learned a complete book
-		if chapterIndex == ITEM_STYLE_CHAPTER_ALL then
+		if not styles[itemStyleId] then
+			-- unknown style, do nothing
+
+		elseif chapterIndex == ITEM_STYLE_CHAPTER_ALL then
+			-- Learned a complete book
 			if styles[itemStyleId].stype == AIRG_STYLE_BASIC or styles[itemStyleId].stype == AIRG_STYLE_CROWNSTORE then
 
 				db.char[playerName].styles[itemStyleId] = true
@@ -559,7 +627,6 @@ local function BuildMatrix(eventCode, arg1, arg2, arg3)
 					mergedCharactersData.styles[itemStyleId][chapterLookupIndex] = true
 				end
 			end
-
 		elseif styles[itemStyleId].stype == AIRG_STYLE_CHAPTERIZED then
 			local newIndexKnown
 			for aiIndex, zosIndex in ipairs(styleChaptersLookup) do
@@ -589,6 +656,8 @@ local function OnCraftSelected(thisCraft)
 			thisCraft = currentCraft
 		end
 	end
+
+	db.currentCraft = thisCraft
 
 	local filterTypeFromCraftingType = {
 		[CRAFTING_TYPE_BLACKSMITHING] = ITEMFILTERTYPE_BLACKSMITHING,
@@ -839,7 +908,7 @@ local function InitUI()
 	AIRG_UI.btnWoodworking:SetNormalTexture("/esoui/art/icons/ability_tradecraft_009.dds")
 	AIRG_UI.btnWoodworking:SetMouseOverTexture("esoui/art/buttons/generic_highlight.dds")
 	AIRG_UI.btnWoodworking:SetHandler("OnClicked", function(self) OnCraftSelected(CRAFTING_TYPE_WOODWORKING) end)
-	AIRG_UI.btnWoodworking:SetHandler("OnMouseEnter", function(self) ZO_Tooltips_ShowTextTooltip(self, RIGHT, GetString(SI_ITEMFILTERTYPE14)) end)
+	AIRG_UI.btnWoodworking:SetHandler("OnMouseEnter", function(self) ZO_Tooltips_ShowTextTooltip(self, RIGHT, GetString(SI_ITEMFILTERTYPE15)) end)
 	AIRG_UI.btnWoodworking:SetHandler("OnMouseExit", function (self) ZO_Tooltips_HideTextTooltip() end)
 
 	-- CREATE BUTTON FOR PROFESSION: CLOTHING
@@ -854,7 +923,7 @@ local function InitUI()
 	AIRG_UI.btnClothing:SetNormalTexture("/esoui/art/icons/ability_tradecraft_008.dds")
 	AIRG_UI.btnClothing:SetMouseOverTexture("esoui/art/buttons/generic_highlight.dds")
 	AIRG_UI.btnClothing:SetHandler("OnClicked", function(self) OnCraftSelected(CRAFTING_TYPE_CLOTHIER) end)
-	AIRG_UI.btnClothing:SetHandler("OnMouseEnter", function(self) ZO_Tooltips_ShowTextTooltip(self, RIGHT, GetString(SI_ITEMFILTERTYPE15)) end)
+	AIRG_UI.btnClothing:SetHandler("OnMouseEnter", function(self) ZO_Tooltips_ShowTextTooltip(self, RIGHT, GetString(SI_ITEMFILTERTYPE14)) end)
 	AIRG_UI.btnClothing:SetHandler("OnMouseExit", function (self) ZO_Tooltips_HideTextTooltip() end)
 
 	-- CREATE BUTTON FOR PROFESSION: JEWELRY CRAFTING
@@ -997,19 +1066,23 @@ local function InitUI()
 	AIRG_UI.motifSection:SetDimensions(750, 240)
 	AIRG_UI.motifSection:SetAnchor(TOP, AIRG_UI.BottomDivider, BOTTOM, 0, 10)
 
-	AIRG_UI.StyleChapterButtons = {}
-	AIRG_UI.StyleStoreButtons = {}
-	AIRG_UI.StyleSingleButtons = {}
+	AIRG_UI.StyleButtons = {}
 
 	local yStyleAnchor = 50
 	local xStyleAnchor = 1
 	local xStyleAnchorAlign = 80
 	local secondLine1stIndex = 16
-	local thirdLine1stIndex = 30
+	local thirdLine1stIndex = 31
 
-	local styleItemId, styleStoreId, styleChapterId = 1, 1, 1
+	local styleItemCtr, styleStoreCtr, styleChapterCtr = 1, 1, 1
+	local styleId, styleData
 
-	for styleId, styleData in pairs(styles) do
+	local ctr
+	for ctr = 1, #styleOrder do
+		styleId = styleOrder[ctr]
+		styleData = styles[styleId]
+
+--	for styleId, styleData in pairs(styles) do
 
 		if not styleData.api or apiVersion >= styleData.api then
 
@@ -1017,57 +1090,58 @@ local function InitUI()
 			local itemName = zo_strformat(SI_TOOLTIP_ITEM_NAME, GetItemLinkName(stoneItemLink))
 			local stoneTexture = GetItemLinkInfo(stoneItemLink)
 
+
 			if styleData.stype == AIRG_STYLE_BASIC then
 
-				AIRG_UI.StyleSingleButtons[styleItemId] = WINDOW_MANAGER:CreateControl("$(parent)StyleSingleButton" .. tostring(styleItemId), AIRG_UI.motifSection, CT_TEXTURE)
-				AIRG_UI.StyleSingleButtons[styleItemId]:SetDimensions(40, 40)
-				AIRG_UI.StyleSingleButtons[styleItemId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 40 * styleItemId + 40, 0)
-				AIRG_UI.StyleSingleButtons[styleItemId]:SetTexture(stoneTexture)
-				AIRG_UI.StyleSingleButtons[styleItemId]:SetMouseEnabled(true)
-				AIRG_UI.StyleSingleButtons[styleItemId]:SetHandler("OnMouseExit", function (self)
+				AIRG_UI.StyleButtons[styleId] = WINDOW_MANAGER:CreateControl("$(parent)StyleButton" .. tostring(styleId), AIRG_UI.motifSection, CT_TEXTURE)
+				AIRG_UI.StyleButtons[styleId]:SetDimensions(40, 40)
+				AIRG_UI.StyleButtons[styleId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 40 * styleItemCtr + 40, 0)
+				AIRG_UI.StyleButtons[styleId]:SetTexture(stoneTexture)
+				AIRG_UI.StyleButtons[styleId]:SetMouseEnabled(true)
+				AIRG_UI.StyleButtons[styleId]:SetHandler("OnMouseExit", function (self)
 					ZO_Tooltips_HideTextTooltip()
 				end)
 
-				styleItemId = styleItemId + 1
+				styleItemCtr = styleItemCtr + 1
 
 			elseif styleData.stype == AIRG_STYLE_CROWNSTORE then
 
-				AIRG_UI.StyleStoreButtons[styleStoreId] = WINDOW_MANAGER:CreateControl("$(parent)StyleStoreButton" .. tostring(styleStoreId), AIRG_UI.motifSection, CT_TEXTURE)
-				AIRG_UI.StyleStoreButtons[styleStoreId]:SetDimensions(40, 40)
-				AIRG_UI.StyleStoreButtons[styleStoreId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 10, styleStoreId * 50 - 50)
-				AIRG_UI.StyleStoreButtons[styleStoreId]:SetTexture(stoneTexture)
-				AIRG_UI.StyleStoreButtons[styleStoreId]:SetMouseEnabled(true)
-				AIRG_UI.StyleStoreButtons[styleStoreId]:SetHandler("OnMouseExit", function (self)
+				AIRG_UI.StyleButtons[styleId] = WINDOW_MANAGER:CreateControl("$(parent)StyleButton" .. tostring(styleId), AIRG_UI.motifSection, CT_TEXTURE)
+				AIRG_UI.StyleButtons[styleId]:SetDimensions(40, 40)
+				AIRG_UI.StyleButtons[styleId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 10, styleStoreCtr * 50 - 50)
+				AIRG_UI.StyleButtons[styleId]:SetTexture(stoneTexture)
+				AIRG_UI.StyleButtons[styleId]:SetMouseEnabled(true)
+				AIRG_UI.StyleButtons[styleId]:SetHandler("OnMouseExit", function (self)
 					ZO_Tooltips_HideTextTooltip()
 				end)
 
-				styleStoreId = styleStoreId + 1
+				styleStoreCtr = styleStoreCtr + 1
 
 			elseif styleData.stype == AIRG_STYLE_CHAPTERIZED then
 
-				if styleChapterId == secondLine1stIndex then
+				if styleChapterCtr == secondLine1stIndex then
 					xStyleAnchor = 1
 					yStyleAnchor = 90
-					xStyleAnchorAlign = 100
+					xStyleAnchorAlign = 80
 				end
 
-				if styleChapterId == thirdLine1stIndex then
+				if styleChapterCtr == thirdLine1stIndex then
 					xStyleAnchor = 1
 					yStyleAnchor = 130
 					xStyleAnchorAlign = 100
 				end
 
-				AIRG_UI.StyleChapterButtons[styleChapterId] = WINDOW_MANAGER:CreateControl("$(parent)StyleChapterButton" .. tostring(styleChapterId), AIRG_UI.motifSection, CT_TEXTURE)
-				AIRG_UI.StyleChapterButtons[styleChapterId]:SetDimensions(32, 32)
-				AIRG_UI.StyleChapterButtons[styleChapterId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 35 * xStyleAnchor + xStyleAnchorAlign, yStyleAnchor)
-				AIRG_UI.StyleChapterButtons[styleChapterId]:SetTexture(stoneTexture)
-				AIRG_UI.StyleChapterButtons[styleChapterId]:SetMouseEnabled(true)
-				AIRG_UI.StyleChapterButtons[styleChapterId]:SetHandler("OnMouseExit", function (self)
+				AIRG_UI.StyleButtons[styleId] = WINDOW_MANAGER:CreateControl("$(parent)StyleButton" .. tostring(styleId), AIRG_UI.motifSection, CT_TEXTURE)
+				AIRG_UI.StyleButtons[styleId]:SetDimensions(32, 32)
+				AIRG_UI.StyleButtons[styleId]:SetAnchor(TOPLEFT, AIRG_UI.motifSection, TOPLEFT, 35 * xStyleAnchor + xStyleAnchorAlign, yStyleAnchor)
+				AIRG_UI.StyleButtons[styleId]:SetTexture(stoneTexture)
+				AIRG_UI.StyleButtons[styleId]:SetMouseEnabled(true)
+				AIRG_UI.StyleButtons[styleId]:SetHandler("OnMouseExit", function (self)
 					ZO_Tooltips_HideTextTooltip()
 				end)
 
 				xStyleAnchor = xStyleAnchor + 1
-				styleChapterId = styleChapterId + 1
+				styleChapterCtr = styleChapterCtr + 1
 
 			end
 		end
@@ -1111,6 +1185,10 @@ local function OnAddonLoaded(_, addonName)
 
 		-- Load the saved variables
 		db = ZO_SavedVars:NewAccountWide("AIRG_SavedVariables", 4, nil, defaults)
+
+		if db.currentCraft then
+			currentCraft = db.currentCraft
+		end
 
 		-- Register Keybinding
 		ZO_CreateStringId("SI_BINDING_NAME_TOGGLE_AIRG", GetString(AIRG_KEYBIND_TOGGLE))
