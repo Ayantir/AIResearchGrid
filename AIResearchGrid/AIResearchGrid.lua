@@ -160,6 +160,7 @@ local styles = {
 	[65] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2044}, --Apostle
 	[66] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2045}, --Ebonshadow
 	[69] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2190}, -- Fang Lair
+	[70] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2189}, -- Scalecaller
 	[71] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2186}, -- Psijic
 	[72] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2187}, -- Sapiarch
 	[75] = {stype = AIRG_STYLE_CHAPTERIZED, achiev = 2285}, -- Pyandonean
@@ -226,9 +227,10 @@ local styleOrder = {
 	[56] = 65,
 	[57] = 66,
 	[58] = 69,
-	[59] = 71,
-	[60] = 72,
-	[61] = 75,
+	[59] = 70,
+	[60] = 71,
+	[61] = 72,
+	[62] = 75,
 	}
 
 
@@ -1134,7 +1136,7 @@ local function InitUI()
 				if styleChapterCtr == thirdLine1stIndex then
 					xStyleAnchor = 1
 					yStyleAnchor = 130
-					xStyleAnchorAlign = 100
+					xStyleAnchorAlign = 80
 				end
 
 				AIRG_UI.StyleButtons[styleId] = WINDOW_MANAGER:CreateControl("$(parent)StyleButton" .. tostring(styleId), AIRG_UI.motifSection, CT_TEXTURE)
@@ -1274,5 +1276,21 @@ function AIRG_ProcessRightClick(control, mButton)
 		)
 end
 -- AM - Achieve links from styles - new function end
+
+function AIRG_ToggleShowStyles()
+	local iconId, icon
+	local r, g, b, a
+
+	for iconId, icon in pairs(AIRG_UI.StyleButtons) do
+		if icon:IsHidden() then
+			icon:SetHidden(false)
+		else
+			r, g, b, a = icon:GetColor()
+			if b == 1 then
+				icon:SetHidden(true)
+			end
+		end
+	end
+end
 
 EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_ADD_ON_LOADED, OnAddonLoaded)
